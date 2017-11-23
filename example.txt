@@ -1,0 +1,78 @@
+En viktig del inom mjukvaruutveckling är sorteringsalgoritmer, och bra sor-
+teringsalgoritmer kan förbättra alla möjliga sorters program. Det vigtiga med
+sorteringsalgoritmer är att de går snabbt och inte använder för mycket minne.
+Detta experiment ämnar utvärdera Javas Collections.sort ur ett tidsperspek-
+tiv. Även JIT -kompilatorns eekt på tidsåtgången kommer att undersökas.
+Javas.tandard-sortering är en implementation av Tim Peters Timsort. I texten
+som endast kallas listsort.txt [1] beskriver Tim sin algoritm i detalj, i dokumen-
+tet finns även jämförelser med pythons föregångare samplesort , dock utifrån
+antal jämförelser av element. Viss relevant information om sorteringsalgorit-
+mer finns i kompendiet för grundkursen i programmering[2]. I den här kursens
+kompendium[3] nns relevant information för experimentets utformning.
+Håller Collections.sort en acceptabel standard gällande sorteringstid?
+Vilken eekt har JIT -kompilatorn på tidsåtgången?
+Innan experimentet kan börjas behöver ett eget program skrivas som kan hämta
+tal från en extern l, spara dem i en LinkedList , sortera dem N gånger och
+skapa en log-l med de resulterande tiderna för varje sortering. I vårt fall an-
+vänder vi oss av quicksort anpassat för LinkedList.
+Med denna förutsättning börjar experimentet med att mäta tiden för 600
+sorteringar med Collections.sort , dessa tider plottas i gur 1.
+I gur 1 refererar dataset 1 till datasetet med slumpade tal, dataset 2 refe-
+rerar till datan som är delvis sorterad.
+Därefter avläses gränsen mellan insvängningsförlopp och jämviktsläget, och me-
+delvärdet samt kondensintervallet för tiderna räknas ut. Kondensintervall och
+medelvärde räknas ut för 10 och 100 körningar. Denna del av experimentet re-
+peteras sedan utan JIT -kompilatorn, för att se eekten JIT -kompilering har på
+körningen. Tiderna utan JIT redovisas i gur 2
+Även utan JIT -kompilatorn beräknas medelvärde och kondensintervall, dock
+endast över 10 körningar.
+Samma sorts mätningar görs för dataset 2 , den delvis sorterade datan, med
+Collections.sort.
+Sist testas även den egna sorteringen på samma sätt över både dataset 1 och
+dataset 2.
+Avslutningsvis jämförs datan från Collections.sort med den egna sortering-
+en, med hjälp av t-test.
+Detta experiment bör ej användas som referensmaterial för att bedöma Collections.sort.
+Experimentet har relativt pålitliga data, i och med att många mätningar gjorts.
+Däremot tar experimentet ej hänsyn till andra faktorer som t.ex. minnesåtgång,
+vilket också är en viktig faktor man måste ta hänsyn till när man utvärderar
+sorteringsalgoritmer. E xperimentet tar heller inte hänsyn till antalet jämförel-
+ser utav element som görs, detta leder till osäkerhet i resultatet då algoritmerna
+kan ta olika tid beroende på externa faktorer som exempelvis operativsystem.
+I dessa tabeller syftar Qsort till vår QuickSort , Col.sort syftar till Collections.sort ,
+dataset 1 respektive dataset 2. Värdena i gur 3-5 är tider i na-
+nosekunder , och värdena i gur 6 är antal sorteringar. Som appendix inkluderas
+även samtliga grafer för en exekvering med JIT , samtliga grafer utan JIT ser ut
+som gur 2 och man kan inte utläsa någon användbar information, därav har
+de utelämnats.
+Dessa data visar starkt på att Collections.sort är mycket snabbare än vår
+LinkedList -implementation av QuickSort , t-testets P-value visar på att ett
+samband är mycket troligt. Detta beror med största sannolikhet huvudsakligen
+på att Collections.sort lägger över datan i en Array och utför sorteringen på
+den Array:n, vilket är mycket snabbare än att ytta data mellan LinkedLists.
+Övertaget syns framförallt på den delvis sorterade datan, där timsorts använd-
+ning av runs [1] ger ett enormt övertag gentemot QuickSort , som inte är en
+Adaptive algorithm [4], den anpassar sig inte efter datan. Det är dock svårt att
+utifrån denna mätdata bedöma om Collections.sort är ett bra val för sorte-
+ringsalgoritm. Detta har att göra med faktorer som nämnts i validitetsdiskussio-
+nen, men även det faktum att algoritmerna som jämförts är helt olika internt,
+på grund av att Collections.sort lägger över datan i en Array bör den endast
+jämföras med andra algoritmer som också sorterar en Array.
+Effekten JIT -kompilatorn har på tidsåtgången verkar vara att tiderna varie-
+rar kraftigt beroende på vad som händer i övrigt, exempelvis om Javas Garbage
+Collector går igång, det nns alltså inte längre ett tydligt mönster. Man ser
+dock från vär mätdata att det blir mycket långsammare utan JIT.
+Utifrån detta verkar JIT -kompilatorns största funktion vara att få programmet
+att köra snabbare, men även att få körningen mer pålitlig gällande tidsåtgången.
+Att stabilisera tiden det ta för ett program att köra har fördelar i situationer där
+mjukvaran är pressad tidsmässigt, då man måste vara säker på att programmet
+inte tar mer än en viss tid.
+Collections.sort verkar utifrån detta experiment vara mycket snabbare på
+att sortera data i en LinkedList än vår anpassade variant av QuickSort. På
+grund av att de jämförda sorteringsalgoritmerna fungerar väldigt olika är de
+inte lämpliga att jämföra, åtminstone inte enbart ur tidsaspekt, resultatet bör
+därför inte användas på egen hand. Allt tyder dock på att Collections.sort
+håller utmärkt standard.
+JIT -kompilatorns största funktion verkar vara att få programmet att köra
+snabbare, men även att få programmet mer pålitligt, på så sätt att det inte ska
+ta olika mycket tid varje gång.

@@ -1,0 +1,11 @@
+Det vigtiga med
+sorteringsalgoritmer är att de går snabbt och inte använder för mycket minne.
+Kondensintervall och
+medelvärde räknas ut för 10 och 100 körningar.
+Detta experiment bör ej användas som referensmaterial för att bedöma Collections.sort.
+Dessa data visar starkt på att Collections.sort är mycket snabbare än vår
+LinkedList -implementation av QuickSort , t-testets P-value visar på att ett
+samband är mycket troligt.
+Det är dock svårt att
+utifrån denna mätdata bedöma om Collections.sort är ett bra val för sorte-
+ringsalgoritm.
