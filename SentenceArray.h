@@ -36,20 +36,20 @@ public:
     }
 
 	void sort(unsigned int num) {
-		int min;
-		int minIndex;
-		for (int i = 0; i < num - 1; ++i) {
-			min = sentences[i];
-			minIndex = i;
-			for (int j = i + 1; j < num; ++j) {
-				if (sentences[j] < min) {
-					min = sentences[j];
-					minIndex = j;
+		float max;
+		int maxIndex;
+		for (int i = 0; i < num; ++i) {
+			max = sentences[i].score;
+			maxIndex = i;
+			for (int j = i + 1; j < size; ++j) {
+				if (sentences[j].score > max) {
+					max = sentences[j].score;
+					maxIndex = j;
 				}
 			}
 			int temp = sentences[i];
-			sentences[i] = sentences[minIndex];
-			sentences[minIndex] = temp;
+			sentences[i] = sentences[maxIndex];
+			sentences[maxIndex] = temp;
 		}
 	}
     
