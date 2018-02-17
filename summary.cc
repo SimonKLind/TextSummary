@@ -17,6 +17,12 @@ void printSentence(ostream &out, Sentence &sentence) {
 }
 
 void count_words(const char *str, WordMap &words) {
+    while(*str && !isAlpha(*str)) ++str;
+    while(*str) {
+        words.add(str);
+        while(isAlpha(*str)) ++str;
+        while(*str && !isAlpha(*str)) ++str;
+    }
 } 
 
 const char* getRaw(const char *filename) {
@@ -33,6 +39,25 @@ const char* getRaw(const char *filename) {
 }
 
 void get_sentences(const char *str, WordMap &words, SentenceArray &sentences) {
+    Sentence sentence;
+    unsigned int num_words;
+    while(*str && !isAlpha(*str)) ++str;
+    while(*str) {
+        sentence.raw = str;
+        sentence.score = 0.0f;
+        num_words = 0;
+        while(*str) {
+            sentence.score += words[str];
+            ++num_words;
+            while(isAlpha(*str)) ++str;
+            if(sentenceEnd(str, 0)) break;
+            while(*str && !isAlpha(*str)) ++str;
+        }
+        sentence.score /= num_words;
+        sentences.add(sentence);
+        // printSentence(cout, sentence);
+        while(*str && !isAlpha(*str)) ++str;
+    }
 }
 
 void save_summary(SentenceArray &sentences, unsigned int num_sentences, const char *filename) {
@@ -46,25 +71,15 @@ void save_summary(SentenceArray &sentences, unsigned int num_sentences, const ch
 }
 
 int main() {
-
-    // Get the raw string from file
-    const char *str = getRaw("example.txt");
-    
-    // Make a WordMap
+    const char *str = getRaw("text.txt");
+    // cout << str << '\n';
     WordMap words;
-
-    // Use function count_words to fill our WordMap
     count_words(str, words);
-
-    // Create a SentenceArray
+    cout << "Counted Words\n";
     SentenceArray sentences;
-
-    // Use get_sentences to fill our SentenceArray
     get_sentences(str, words, sentences);
-
-    // Save a number of sentences to a file (in this case 5 sentences)
-    save_summary(sentences, 5, "example_out.txt");
-
-    // Don't forget to delete the string...
+    cout << "Got sentences\n";
+    save_summary(sentences, 5, "test_out.txt");
+    cout << "Saved Summary\n";
     delete[] str;
 }
